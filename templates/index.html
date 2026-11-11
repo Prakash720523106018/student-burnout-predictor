@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Student Burnout Predictor</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background: #0b0f19; color: #f3f4f6; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 25px; }
+        .card { background: #111827; border: 1px solid #1f2937; border-radius: 16px; width: 100%; max-width: 480px; padding: 28px; box-shadow: 0 15px 35px rgba(0,0,0,0.6); }
+        .badge { display: inline-block; background: #6366f1; color: white; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; }
+        h1 { font-size: 22px; font-weight: 700; color: #f9fafb; margin-bottom: 4px; }
+        p.sub { font-size: 13px; color: #9ca3af; margin-bottom: 22px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px; }
+        .field { display: flex; flex-direction: column; }
+        .full-width { grid-column: span 2; }
+        label { font-size: 12px; font-weight: 600; color: #d1d5db; margin-bottom: 6px; }
+        input { background: #1f2937; border: 1px solid #374151; border-radius: 8px; padding: 10px 12px; color: #fff; font-size: 14px; outline: none; transition: border 0.2s; }
+        input:focus { border-color: #6366f1; }
+        button { width: 100%; background: #6366f1; color: white; border: none; border-radius: 8px; padding: 13px; font-size: 15px; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+        button:hover { background: #4f46e5; }
+        .output { margin-top: 22px; padding: 16px; border-radius: 10px; text-align: center; border: 1px solid transparent; }
+        .output.success { background: rgba(16, 185, 129, 0.12); border-color: #10b981; color: #34d399; }
+        .output.warning { background: rgba(245, 158, 11, 0.12); border-color: #f59e0b; color: #fbbf24; }
+        .output.danger { background: rgba(239, 68, 68, 0.12); border-color: #ef4444; color: #f87171; }
+        .res-level { font-size: 18px; font-weight: 800; margin-bottom: 4px; }
+        .res-advice { font-size: 13px; margin-bottom: 8px; opacity: 0.95; }
+        .res-conf { font-size: 12px; font-weight: 600; opacity: 0.8; }
+        .footer { text-align: center; margin-top: 20px; font-size: 11px; color: #6b7280; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <span class="badge">ML Classifier • Random Forest</span>
+        <h1>AI Student Burnout Detector</h1>
+        <p class="sub">Lifestyle metrics vechi stress & burnout risk-ah predict pannum.</p>
+
+        <form action="/predict" method="POST">
+            <div class="grid">
+                <div class="field">
+                    <label>Study Time (Hours/day)</label>
+                    <input type="number" step="any" name="study" placeholder="e.g. 6" value="{{ study if study is defined else '' }}" required>
+                </div>
+                <div class="field">
+                    <label>Sleep Duration (Hours)</label>
+                    <input type="number" step="any" name="sleep" placeholder="e.g. 7" value="{{ sleep if sleep is defined else '' }}" required>
+                </div>
+                <div class="field">
+                    <label>Screen Time (Hours/day)</label>
+                    <input type="number" step="any" name="screen" placeholder="e.g. 5" value="{{ screen if screen is defined else '' }}" required>
+                </div>
+                <div class="field">
+                    <label>Caffeine (Cups/day)</label>
+                    <input type="number" step="any" name="caffeine" placeholder="e.g. 2" value="{{ caffeine if caffeine is defined else '' }}" required>
+                </div>
+                <div class="field full-width">
+                    <label>Exercise / Walk (Minutes/day)</label>
+                    <input type="number" step="any" name="exercise" placeholder="e.g. 30" value="{{ exercise if exercise is defined else '' }}" required>
+                </div>
+            </div>
+            <button type="submit">Predict Burnout Level</button>
+        </form>
+
+        {% if level %}
+        <div class="output {{ badge }}">
+            <div class="res-level">{{ emoji }} {{ level }}</div>
+            <div class="res-advice">{{ advice }}</div>
+            <div class="res-conf">Model Confidence Score: {{ confidence }}%</div>
+        </div>
+        {% elif error %}
+        <div class="output danger">
+            <div class="res-level">Error</div>
+            <div class="res-advice">{{ error }}</div>
+        </div>
+        {% endif %}
+
+        <div class="footer">DevOps Ready • Flask + Scikit-Learn + Vercel</div>
+    </div>
+</body>
+</html>
